@@ -1,0 +1,78 @@
+#!/bin/sh
+
+source $(dirname $0)/../config
+
+WLAN="wlp2s0"
+ETH="eno1"
+
+E_STATE=`ip link show dev $ETH 2> /dev/null | grep -Eo 'state (DOWN|UP)' | cut -d' ' -f2`
+W_STATE=`ip link show dev $WLAN 2> /dev/null | grep -Eo 'state (DOWN|UP)' | cut -d' ' -f2`
+O_STATE=`pgrep -x openvpn`
+
+network_info=""
+
+if [ "$W_STATE" == "UP" ]; then
+    QUAL=`iwconfig $WLAN | awk '/Link Quality=/ { gsub(/[=/]/," "); print $3 }'`
+    MAX=`iwconfig $WLAN | awk '/Link Quality=/ { gsub(/[=/]/," "); print $4 }'`
+    PERC=`echo $QUAL*100/$MAX | bc`
+
+    ESSID=`iwconfig $WLAN | head -n1 | grep -Eo '".+"' | tr -d \"`
+    case $PERC in
+        [0-4])
+            icon=""
+            if [ $O_STATE ]; then
+                icon=""
+            fi
+            ;;
+        [4-9])
+            icon=""
+            if [ $O_STATE ]; then
+                icon=""
+            fi
+            ;;
+        1[0-9]|[2-3]*)
+            icon=""
+            if [ $O_STATE ]; then
+                icon=""
+            fi
+            ;;
+        [4-5]*)
+            icon=""
+            if [ $O_STATE ]; then
+                icon=""
+            fi
+            ;;
+        [6-7]*)
+            icon=""
+            if [ $O_STATE ]; then
+                icon=""
+            fi
+            ;;
+        *)
+            icon=""
+            if [ $O_STATE ]; then
+                icon=""
+            fi
+            ;;
+    esac
+
+    network_info="%{F$COLOR_ICON}$icon%{F-} $ESSID"
+fi
+
+if [ "$E_STATE" == "UP" ]; then
+    icon=""
+    if [ $O_STATE ]; then
+        icon=""
+    fi
+
+    icon="%{F$COLOR_ICON}$icon%{F-}"
+    if [ "$W_STATE" == "UP" ]; then
+        icon="($icon)"
+    else
+        icon="$icon $ETH"
+    fi
+    network_info="$network_info $icon"
+fi
+
+echo $network_info
+

@@ -1,0 +1,36 @@
+#!/bin/sh
+
+displays=`xrandr -q | awk '/ connected / { print $1 }'`
+disconnected=`xrandr -q | awk '/ disconnected / { print $1 }'`
+displays_count=$(echo "$displays" | wc -l)
+
+cmd="/usr/bin/xrandr"
+
+last_display=
+for display in $displays; do
+
+    if [ $displays_count -eq 1 ]; then
+        cmd="$cmd --output $display --auto"
+    elif [ $displays_count -gt 1 ]; then
+        if [ "$display" == "LVDS1" ]; then
+            cmd="$cmd --output $display --off"
+        else
+            if [ -n "$last_display" ]; then
+                cmd="$cmd --output $display --auto --right-of $last_display"
+            else
+                cmd="$cmd --output $display --auto"
+            fi
+
+            last_display="$display"
+        fi
+    else
+        exit 1
+    fi
+done
+
+for display in $disconnected; do
+    cmd="$cmd --output $display --off"
+done
+
+eval "$cmd"
+

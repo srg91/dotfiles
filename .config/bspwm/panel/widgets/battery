@@ -1,0 +1,30 @@
+#!/bin/sh
+source $(dirname $0)/../config
+
+BAT=`acpi -b | awk '{gsub(/%,/,""); print $4}' | sed 's/%//g'`
+STATUS=`acpi -b | awk '{gsub(/,/,""); print $3}'`
+
+if [[ $STATUS != "Discharging" ]]; then
+    icon=""
+elif [[ $BAT -lt 10 ]]; then
+    icon=""
+elif [[ $BAT -lt 40 ]]; then
+    icon=""
+elif [[ $BAT -lt 70 ]]; then
+    icon=""
+else
+    icon=""
+fi
+
+case $BAT in
+    [0-5])
+        icon="%{F#ffef2929}$icon%{F-}"
+        ;;
+    [5-9])
+        icon="%{F#fffce94f}$icon%{F-}"
+        ;;
+    *)
+        icon="%{F$COLOR_ICON}$icon%{F-}"
+esac
+
+echo "$icon ${BAT}%%"

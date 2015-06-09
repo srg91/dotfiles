@@ -1,0 +1,21 @@
+# vim:ft=sh:
+
+FONT1="-misc-stlarch-medium-r-normal--10-100-75-75-c-80-iso10646-1"
+FONT2="-*-terminus-medium-*-*-*-12-*-*-*-*-*-*-*"
+
+COLOR_BACKGROUND="#ff191716"
+COLOR_FOREGROUND="#ffdaba8b"
+COLOR_ICON="#ff845336"
+COLOR_ACTIVE="#ffdaba8b"
+COLOR_OCCUPIED="#ff845336"
+COLOR_INACTIVE="#ff845336"
+COLOR_URGENT="#ffdaba8b"
+
+# Height of underlines / overlines
+LINEHEIGHT="3"
+
+PANEL_FIFO=/tmp/.panel-fifo
+PANEL_HEIGHT=15
+PANEL_WIDTH=''
+PANEL_GEOMETRY="${PANEL_WIDTH}x${PANEL_HEIGHT}+0+0"
+

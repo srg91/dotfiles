@@ -1,0 +1,23 @@
+#!/bin/bash
+
+source $(dirname $0)/../config
+
+device="Master"
+if [ -z "`amixer get $device 2> /dev/null`" ]; then
+    device="PCM"
+fi
+
+level=`amixer get $device | sed -n 's/^.*\[\([0-9]\+\)%.*$/\1/p' | sort -nr | head -n1`
+state=`amixer get $device | sed -n 's/^.*\[\(o[nf]\+\)]$/\1/p' | uniq`
+
+if [ "$state" == "off" ]; then
+    icon=""
+elif [ "$level" -lt 30 ]; then
+    icon=""
+elif [ "$level" -lt 60 ]; then
+    icon=""
+else
+    icon=""
+fi
+
+echo "%{F$COLOR_ICON}$icon%{F-} $level%%"

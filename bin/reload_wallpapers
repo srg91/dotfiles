@@ -1,0 +1,69 @@
+#!/bin/sh
+
+if [ `pgrep -fc $0` -gt 1 ]; then
+    exit 1
+fi 
+
+wallpapers_dir=$HOME/.config/wallpapers
+mkdir -p $wallpapers_dir
+
+background_color="#191716"
+foreground_color="#4c423d"
+line_color="#daba8b"
+
+DISPLAYS=$(xrandr | grep ' connected ' | grep -Eo '[0-9]+x[0-9]+')
+
+
+function reload_wallpapers()
+{
+    local feh_cmd=""
+
+    for size in $DISPLAYS; do
+        if [ -f "$wallpapers_dir/${size}.png" ]; then
+            feh_cmd="$feh_cmd --bg-scale $wallpapers_dir/${size}.png"
+        fi
+    done
+
+    if [ -n "$feh_cmd" ]; then
+        eval "feh $feh_cmd"
+    fi
+}
+
+
+function get_display_hash()
+{
+    local size="$1"
+    local color_salt="$background_color$foreground_color$line_color"
+    local wallpaper_file="$wallpapers_dir/${size}.png"
+
+    if [ -f $wallpaper_file ]; then
+        local wallpaper_hash=`md5sum $wallpaper_file | cut -f1 -d' '`
+        echo `echo "$color_salt$wallpaper_hash" | md5sum | cut -f1 -d' '`
+    fi
+}
+
+
+function recreate_wallpapers()
+{
+    local cmd="convert -size 4x4 xc:none -fill '${line_color}30' -draw 'line 2,0 0,2 point 3,3' -write mpr:pattern +delete \
+              -size %size% -background none tile:mpr:pattern -write mpr:lines +delete \
+              -size %size% radial-gradient:'${foreground_color}'-'${background_color}' mpr:lines -flatten \
+              $wallpapers_dir/%size%.png"
+
+    for size in $DISPLAYS; do
+        local wallpaper_file="$wallpapers_dir/${size}.png"
+        local wallpaper_hash_file="$wallpapers_dir/.${size}.png.md5"
+
+        local display_hash=`get_display_hash "$size"`
+        local wallpaper_hash=`cat "$wallpaper_hash_file" 2> /dev/null`
+
+        if [ ! -f $wallpaper_file ] || [ "$display_hash" != "$wallpaper_hash" ]; then
+            eval $(echo $cmd | sed "s/%size%/$size/g")
+            echo "$(get_display_hash $size)" > "$wallpaper_hash_file"
+        fi
+    done
+
+    reload_wallpapers
+}
+
+recreate_wallpapers

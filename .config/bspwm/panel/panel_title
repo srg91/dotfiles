@@ -1,0 +1,7 @@
+#!/bin/sh
+
+source $(dirname $0)/config
+
+# cmd='xmessage -buttons Cancel:0,"Shutdown":1,"Restart":2,"Log out":3 -default Cancel "What do you want?" -timeout 60 ; case $? in 1) shutdown now ;; 2) restart ;; 3) killall bspwm ; killall panel ; killall trayer ;; esac'
+cmd="killall bspwm ; killall panel ; killall trayer"
+echo " %{F$COLOR_ICON}%{A:$cmd:}%{A}%{F-}"

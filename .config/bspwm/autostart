@@ -1,0 +1,20 @@
+#!/bin/sh
+
+source ~/.zprofile
+
+VBoxClient-all &
+~/bin/reconfigurator &
+
+xrdb -merge ~/.Xresources &
+xset +fp /usr/share/fonts/local
+xset +fp ~/.local/share/fonts/
+xset fp rehash 
+
+xsetroot -cursor_name left_ptr &
+~/bin/reload_wallpapers &
+clipmenud &
+numlockx on &
+
+xautolock -time 5 -locker "$HOME/bin/locker" &
+light-locker &
+twmnd &

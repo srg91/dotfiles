@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# pids="`pgrep -x panel` `pgrep -x trayer` `pgrep -x compton`"
+# for pid in $pids; do
+#     kill "$pid" &> /dev/null
+# done
+killall panel &> /dev/null
+killall trayer &> /dev/null
+
+rules=`bspc rule -l | sort | uniq | cut -f1 -d' '`
+if [ -n "$rules" ]; then
+    for rule in "$rules"; do
+        bspc rule -r $rule
+    done
+fi
+
+$HOME/.config/bspwm/bspwmrc &

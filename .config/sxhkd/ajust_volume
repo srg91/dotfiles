@@ -1,0 +1,18 @@
+#!/bin/sh
+
+device="Master"
+if [ -z "`amixer get $device 2> /dev/null`" ]; then
+    device="PCM"
+fi
+
+if [ -n "$1" ]; then
+    if [ "$1" == "mute" ]; then
+        if [ -z "`amixer get $device | grep -F [off]`" ]; then
+            amixer -q set "$device" mute
+        else
+            amixer -q set "$device" unmute
+        fi
+    else
+        amixer -q set "$device" "$1"
+    fi
+fi

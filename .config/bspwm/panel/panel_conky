@@ -1,0 +1,8 @@
+short_units yes
+background yes
+out_to_console yes
+out_to_x no
+update_interval 1
+
+TEXT
+S${exec ./widgets/network} ${exec ./widgets/volume} ${execi 5 ./widgets/battery} ${exec ./widgets/clock} ${exec ./widgets/keyboard} ${exec ./widgets/trayer}

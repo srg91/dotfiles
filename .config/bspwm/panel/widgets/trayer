@@ -1,0 +1,20 @@
+#!/bin/sh -xl
+[ ! "$(pgrep -xc trayer)" -gt 0 ] && exit 0
+trayer_ids="$(xdotool search --class trayer)"
+
+for trayer_id in $trayer_ids; do
+    if [ -n "`xprop -id $trayer_id | grep _NET_WM_WINDOW_TYPE_DOCK`" ]; then
+        break
+    fi
+done
+
+
+if [ -n "$trayer_id" ] ; then
+    trayer_width=$(xwininfo -id $trayer_id 2> /dev/null | awk '/Width/ {print $2}')
+    spaces_count=$(expr $trayer_width / 6)
+    free_space=$(printf "%-${spaces_count}s" " ")
+
+    if [ $spaces_count -ge 1 ]; then
+        echo "| $free_space"
+    fi
+fi

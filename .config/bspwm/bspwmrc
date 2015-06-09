@@ -1,0 +1,55 @@
+#!/bin/sh
+# do this here so that we know the NetWM anchor window is up
+bspc config wm_name LG3D
+wmname LG3D
+# $(dirname $0)/java_nonreparenting_wm_fix
+
+bspc config top_padding 15
+
+bspc config border_width        2
+bspc config window_gap         12
+
+bspc config split_ratio         0.50
+bspc config borderless_monocle  true
+bspc config gapless_monocle     true
+# bspc config focus_by_distance   true
+# bspc config focus_follows_pointer true
+bspc config remove_disabled_monitors true
+bspc config remove_unplugged_monitors true
+
+# bspc config normal_border_color "#041e37"
+# bspc config active_border_color "#4a6b8a"
+# bspc config focused_border_color "#4a6b8a"
+# bspc config presel_border_color "#a4b7ca"
+# bspc config urgent_border_color "#a4b7ca"
+# bspc config focused_locked_border_color "#133453"
+bspc config normal_border_color "#845336"
+bspc config active_border_color "#daba8b"
+bspc config focused_border_color "#daba8b"
+bspc config presel_border_color "#8c4f4a"
+bspc config urgent_border_color "#8c4f4a"
+bspc config focused_locked_border_color "#8c4f4a"
+
+bspc monitor -d I II III IV V VI VII VIII IX X
+
+# bspc rule -a Gimp desktop=^8 follow=on floating=on
+# bspc rule -a Chromium desktop=^2
+# bspc rule -a mplayer2 floating=on
+# bspc rule -a Kupfer.py focus=on
+# bspc rule -a Screenkey manage=off
+bspc rule -a oracle-ide-osgi-boot-OracleIdeLauncher floating=on
+bspc rule -a sun-awt-X11-XDialogPeer floating=on
+bspc rule -a widget floating=on
+
+bspc rule -a Firefox desktop=^2
+bspc rule -a jetbrains-pycharm desktop=^4
+bspc rule -a jetbrains-pychar desktop=^4
+bspc rule -a oracle-ide-osgi-boot-OracleIdeLauncher desktop=^3
+bspc rule -a Skype desktop=^7
+bspc rule -a Pidgin desktop=^7
+
+$(dirname $0)/panel/panel &
+sleep 2 && trayer --edge top --align right --SetDockType true --SetPartialStrut true --widthtype request --height 15 --transparent true --alpha 0 --tint 0x191716 2> /dev/null &
+
+compton -b --config ~/.config/compton.conf 2> /dev/null &
+

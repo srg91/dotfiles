@@ -1,0 +1,19 @@
+FONT1="-misc-stlarch-medium-r-normal--10-100-75-75-c-80-iso10646-1"
+FONT2="-*-terminus-medium-*-*-*-12-*-*-*-*-*-*-*"
+
+COLOR_BACKGROUND="#ff041e37"
+COLOR_FOREGROUND="#ff4a6b8a"
+COLOR_ICON="#ff728ca6"
+COLOR_ACTIVE="#ffa4b7ca"
+COLOR_OCCUPIED="#ff4a6b8a"
+COLOR_INACTIVE="#ff4a6b8a"
+COLOR_URGENT="#ff728ca6"
+
+# Height of underlines / overlines
+LINEHEIGHT="3"
+
+PANEL_FIFO=/tmp/.panel-fifo
+PANEL_HEIGHT=15
+PANEL_WIDTH=''
+PANEL_GEOMETRY="${PANEL_WIDTH}x${PANEL_HEIGHT}+0+0"
+

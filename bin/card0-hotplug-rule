@@ -1,0 +1,11 @@
+#!/bin/sh
+
+USER="srg91"
+DISPLAY=":0"
+HOME="/home/$USER"
+XAUTHORITY="$HOME/.Xauthority"
+BSPWM_SOCKET=$(sed 's/\x0/\n/g' /proc/$(pgrep -x bspwm)/environ | awk -F'=' '/BSPWM_SOCKET/ {print $2}')
+
+DISPLAY=$DISPLAY HOME=$HOME XAUTHORITY=$XAUTHORITY $HOME/bin/apply_display_rules
+[ -n "$(pgrep -f reconfigurator)" ] && killall -s SIGUSR1 reconfigurator
+

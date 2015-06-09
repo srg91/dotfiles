@@ -1,0 +1,27 @@
+#!/bin/sh
+
+if [ "$(pgrep -fcU $UID $(basename $0))" -gt 1 ]; then
+    echo "Already running, exiting..."
+    exit 1
+fi
+
+function reload_config()
+{
+    [ ! "$(pgrep -xcU $UID bspwm)" -gt 0 ] && return 1
+
+    setsid $HOME/.config/bspwm/reload_config
+    setsid $HOME/bin/reload_wallpapers
+}
+
+function infinity_loop()
+{
+    [[ $PID ]] && kill $PID
+
+    sleep infinity & PID=$!
+    wait
+}
+
+trap 'reload_config & infinity_loop' USR1
+trap '[[ $PID ]] && kill $PID' INT TERM QUIT EXIT
+
+infinity_loop

@@ -1,0 +1,52 @@
+#!/bin/sh
+
+source $(dirname $0)/config
+
+while read -r line ; do
+    case $line in
+        S*)
+            sys_info="%{r}${line#?}"
+            ;;
+        T*)
+            title="%{l}$(./panel_title)"
+            ;;
+        W*)
+            wm_tabs="%{c}"
+            IFS=':'
+            set -- ${line#?}
+            while [ $# -gt 0 ] ; do
+                item=$1
+                name=${item#?}
+                
+                if [[ $item != L* ]]; then
+                    wm_tabs="$wm_tabs%{A:bspc desktop -f $name:}"
+                fi
+
+                case $item in
+                    [OFU]*)
+                        # active desktop
+                        wm_tabs="$wm_tabs%{F$COLOR_ACTIVE}%{F-}"
+                        ;;
+                    o*)
+                        # inactive, but occupied desktop
+                        wm_tabs="$wm_tabs%{F$COLOR_OCCUPIED}%{F-}"
+                        ;;
+                    f*)
+                        # inactive desktop
+                        wm_tabs="$wm_tabs%{F$COLOR_INACTIVE}%{F-}"
+                        ;;
+                    u*)
+                        # urgent desktop
+                        wm_tabs="$wm_tabs%{F$COLOR_URGENT}%{F-}"
+                        ;;
+                esac
+                
+                if [[ $item != L* ]]; then
+                    wm_tabs="$wm_tabs%{A} "
+                fi
+                shift
+            done
+            ;;
+    esac
+    printf "%s\n" "$title$wm_tabs$sys_info"
+done 

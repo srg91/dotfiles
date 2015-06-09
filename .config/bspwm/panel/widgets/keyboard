@@ -1,0 +1,12 @@
+#!/bin/sh
+
+source $(dirname $0)/../config
+
+keyboard_layout=$(xkb-switch | head -c2)
+capslock=$(xset q | awk '/Caps Lock/ {print $4}')
+if [ $capslock == 'on' ]; then
+    keyboard_layout=${keyboard_layout^^}
+fi
+
+echo "%{F$COLOR_ICON}[%{F-}$keyboard_layout%{F$COLOR_ICON}]%{F-}"
+
